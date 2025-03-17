@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { KitchenCard } from '@/components/ui/KitchenCard';
 import { kitchens } from '@/utils/data';
@@ -20,12 +20,20 @@ export const FeaturedKitchens = () => {
               Discover our community of home chefs and local kitchens creating authentic Indian food with love and passion.
             </p>
           </div>
-          <Link to="/kitchens">
-            <Button variant="link" className="text-primary p-0 flex items-center mt-4 md:mt-0">
-              View all kitchens
-              <ChevronRight size={16} className="ml-1" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 mt-4 md:mt-0">
+            <Link to="/nearby-kitchens">
+              <Button variant="outline" className="flex items-center">
+                <MapPin size={16} className="mr-2" />
+                View Map
+              </Button>
+            </Link>
+            <Link to="/kitchens">
+              <Button variant="link" className="text-primary p-0 flex items-center">
+                View all kitchens
+                <ChevronRight size={16} className="ml-1" />
+              </Button>
+            </Link>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
