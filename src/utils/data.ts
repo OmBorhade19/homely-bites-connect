@@ -1,4 +1,3 @@
-
 // Kitchen Types
 export interface Kitchen {
   id: string;
@@ -37,8 +36,8 @@ export interface Dish {
 export const kitchens: Kitchen[] = [
   {
     id: "k1",
-    name: "Punjabi Dhaba",
-    image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+    name: "Asha's Kitchen",
+    image: "/lovable-uploads/ed1ef5c8-6311-4820-bf19-c519d8e84d4a.png",
     cuisine: "North Indian",
     rating: 4.5,
     deliveryTime: "30-40 min",
@@ -124,7 +123,7 @@ export const dishes: Dish[] = [
     name: "Butter Chicken",
     image: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db",
     price: 320,
-    kitchen: "Punjabi Dhaba",
+    kitchen: "Asha's Kitchen",
     kitchenId: "k1",
     isVegetarian: false,
     rating: 4.8,
@@ -204,7 +203,7 @@ export const dishes: Dish[] = [
     name: "Rajma Chawal",
     image: "https://images.unsplash.com/photo-1565557623262-b51c2513a641",
     price: 250,
-    kitchen: "Punjabi Dhaba",
+    kitchen: "Asha's Kitchen",
     kitchenId: "k1",
     isVegetarian: true,
     rating: 4.5,
