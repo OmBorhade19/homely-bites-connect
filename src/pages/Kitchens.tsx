@@ -4,7 +4,7 @@ import { Layout } from '@/components/layout/Layout';
 import { KitchenCard } from '@/components/ui/KitchenCard';
 import { SearchBar } from '@/components/common/SearchBar';
 import { kitchens } from '@/utils/data';
-import { Filter, ChevronDown } from 'lucide-react';
+import { Filter, ChevronDown, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
