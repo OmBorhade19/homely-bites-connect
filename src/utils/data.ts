@@ -51,7 +51,7 @@ export const kitchens: Kitchen[] = [
   {
     id: "k2",
     name: "South Indian Delights",
-    image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b",
+    image: "/lovable-uploads/0bfc9ee7-d53b-4a9c-8d6a-801c78eb97b9.png",
     cuisine: "South Indian",
     rating: 4.7,
     deliveryTime: "25-35 min",
