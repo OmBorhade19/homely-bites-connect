@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { KitchenCard } from '@/components/ui/KitchenCard';
 import { SearchBar } from '@/components/common/SearchBar';
 import { kitchens } from '@/utils/data';
-import { Filter, ChevronDown, X } from 'lucide-react';
+import { Filter, ChevronDown, X, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { 
@@ -32,7 +32,6 @@ const Kitchens = () => {
   }, []);
 
   useEffect(() => {
-    // Apply filters
     let result = [...allKitchens];
     
     if (filters.vegetarian) {
@@ -71,6 +70,13 @@ const Kitchens = () => {
             </div>
             
             <div className="flex items-center space-x-3">
+              <Link to="/nearby-kitchens">
+                <Button variant="default" className="flex items-center space-x-2">
+                  <MapPin size={16} />
+                  <span>View Map</span>
+                </Button>
+              </Link>
+              
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="flex items-center space-x-2">
