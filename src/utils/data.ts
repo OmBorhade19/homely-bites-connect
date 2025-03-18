@@ -1,3 +1,4 @@
+
 // Kitchen Types
 export interface Kitchen {
   id: string;
@@ -38,7 +39,7 @@ export const kitchens: Kitchen[] = [
     id: "k1",
     name: "Asha's Kitchen",
     image: "/lovable-uploads/ed1ef5c8-6311-4820-bf19-c519d8e84d4a.png",
-    cuisine: "North Indian",
+    cuisine: "Maharashtrian",
     rating: 4.5,
     deliveryTime: "30-40 min",
     distance: "2.5 km",
@@ -46,7 +47,7 @@ export const kitchens: Kitchen[] = [
     trending: true,
     discount: 10,
     isNew: false,
-    description: "Authentic Punjabi cuisine made with traditional recipes and spices. Our chefs bring you the true taste of Punjab right to your doorstep."
+    description: "Authentic Maharashtrian cuisine made with traditional recipes and spices. Our chefs bring you the true taste of Maharashtra right to your doorstep."
   },
   {
     id: "k2",
