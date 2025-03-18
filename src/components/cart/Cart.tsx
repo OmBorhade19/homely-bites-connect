@@ -79,6 +79,17 @@ export const Cart = ({ onClose }: CartProps) => {
   const handlePayNow = () => {
     if (paymentMethod === 'upi') {
       setShowUpiQr(true);
+      
+      // Automatically show payment successful after 4 seconds
+      setTimeout(() => {
+        setShowUpiQr(false);
+        toast.success('UPI payment successful!');
+        setPaymentStep('complete');
+        setTimeout(() => {
+          onClose();
+          navigate('/');
+        }, 2000);
+      }, 4000);
     } else if (paymentMethod === 'card') {
       toast.loading('Processing payment...');
       setTimeout(() => {
@@ -97,16 +108,6 @@ export const Cart = ({ onClose }: CartProps) => {
         navigate('/');
       }, 2000);
     }
-  };
-
-  const handleUpiComplete = () => {
-    setShowUpiQr(false);
-    toast.success('UPI payment successful!');
-    setPaymentStep('complete');
-    setTimeout(() => {
-      onClose();
-      navigate('/');
-    }, 2000);
   };
 
   const deliveryFee = 49;
@@ -208,26 +209,15 @@ export const Cart = ({ onClose }: CartProps) => {
       <Dialog open={showUpiQr} onOpenChange={setShowUpiQr}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Scan QR Code to Pay</DialogTitle>
+            <DialogTitle>Scan QR Code</DialogTitle>
           </DialogHeader>
-          <div className="flex flex-col items-center p-4">
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+          <div className="flex justify-center p-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm">
               <img 
                 src="/lovable-uploads/66006829-4b6e-4a18-8e38-21546adbaee9.png" 
                 alt="UPI QR Code" 
-                className="w-56 h-56 object-contain"
+                className="w-64 h-64 object-contain"
               />
-            </div>
-            <p className="text-center mb-4">
-              Open any UPI app and scan this code to pay <strong>{formattedPrice(total)}</strong>
-            </p>
-            <div className="flex space-x-4">
-              <Button variant="outline" onClick={() => setShowUpiQr(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleUpiComplete}>
-                I've Completed Payment
-              </Button>
             </div>
           </div>
         </DialogContent>
