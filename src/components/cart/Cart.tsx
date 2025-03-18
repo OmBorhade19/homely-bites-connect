@@ -1,10 +1,12 @@
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, X } from 'lucide-react';
+import { ShoppingBag, X, Check, CreditCard, Smartphone, BanknoteIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CartItem } from './CartItem';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 // Sample cart items data
 const initialCartItems = [
@@ -37,6 +39,9 @@ interface CartProps {
 
 export const Cart = ({ onClose }: CartProps) => {
   const [cartItems, setCartItems] = useState(initialCartItems);
+  const [paymentStep, setPaymentStep] = useState('cart'); // 'cart', 'payment', 'complete'
+  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [showUpiQr, setShowUpiQr] = useState(false);
   const navigate = useNavigate();
   
   const calculateTotal = () => {
@@ -65,10 +70,46 @@ export const Cart = ({ onClose }: CartProps) => {
   };
 
   const handleCheckout = () => {
-    // Implement checkout logic
-    toast.success('Proceeding to checkout...');
-    onClose();
-    navigate('/checkout');
+    setPaymentStep('payment');
+  };
+
+  const handlePaymentSelect = (value: string) => {
+    setPaymentMethod(value);
+  };
+
+  const handlePayNow = () => {
+    if (paymentMethod === 'upi') {
+      setShowUpiQr(true);
+    } else if (paymentMethod === 'card') {
+      // Simulating payment processing
+      toast.loading('Processing payment...');
+      setTimeout(() => {
+        toast.success('Payment successful!');
+        setPaymentStep('complete');
+        setTimeout(() => {
+          onClose();
+          navigate('/');
+        }, 2000);
+      }, 2000);
+    } else {
+      // Cash on delivery
+      toast.success('Order placed successfully!');
+      setPaymentStep('complete');
+      setTimeout(() => {
+        onClose();
+        navigate('/');
+      }, 2000);
+    }
+  };
+
+  const handleUpiComplete = () => {
+    setShowUpiQr(false);
+    toast.success('UPI payment successful!');
+    setPaymentStep('complete');
+    setTimeout(() => {
+      onClose();
+      navigate('/');
+    }, 2000);
   };
 
   const deliveryFee = 49;
@@ -84,22 +125,136 @@ export const Cart = ({ onClose }: CartProps) => {
     }).format(price);
   };
 
-  return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between py-4 border-b border-border">
-        <div className="flex items-center">
-          <ShoppingBag className="mr-2" size={20} />
-          <h2 className="text-xl font-semibold">Your Cart</h2>
-          <span className="ml-2 px-2 py-0.5 bg-primary/10 text-primary text-sm rounded-full">
-            {cartItems.length} items
-          </span>
+  const renderPaymentMethods = () => {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex items-center justify-between py-4 border-b border-border">
+          <h2 className="text-xl font-semibold">Payment Method</h2>
+          <Button variant="ghost" size="icon" onClick={() => setPaymentStep('cart')}>
+            <X size={20} />
+          </Button>
         </div>
-        <Button variant="ghost" size="icon" onClick={onClose}>
-          <X size={20} />
+        
+        <div className="py-6 flex-grow">
+          <RadioGroup 
+            value={paymentMethod} 
+            onValueChange={handlePaymentSelect} 
+            className="space-y-4"
+          >
+            <div className={`flex items-center space-x-3 rounded-lg border p-4 ${paymentMethod === 'card' ? 'border-primary' : 'border-border'}`}>
+              <RadioGroupItem value="card" id="card" />
+              <label htmlFor="card" className="flex items-center cursor-pointer flex-1">
+                <CreditCard className="mr-3 text-muted-foreground" size={20} />
+                <div>
+                  <p className="font-medium">Credit/Debit Card</p>
+                  <p className="text-sm text-muted-foreground">Pay securely with your card</p>
+                </div>
+              </label>
+            </div>
+            
+            <div className={`flex items-center space-x-3 rounded-lg border p-4 ${paymentMethod === 'upi' ? 'border-primary' : 'border-border'}`}>
+              <RadioGroupItem value="upi" id="upi" />
+              <label htmlFor="upi" className="flex items-center cursor-pointer flex-1">
+                <Smartphone className="mr-3 text-muted-foreground" size={20} />
+                <div>
+                  <p className="font-medium">UPI</p>
+                  <p className="text-sm text-muted-foreground">Pay using any UPI app</p>
+                </div>
+              </label>
+            </div>
+            
+            <div className={`flex items-center space-x-3 rounded-lg border p-4 ${paymentMethod === 'cod' ? 'border-primary' : 'border-border'}`}>
+              <RadioGroupItem value="cod" id="cod" />
+              <label htmlFor="cod" className="flex items-center cursor-pointer flex-1">
+                <BanknoteIcon className="mr-3 text-muted-foreground" size={20} />
+                <div>
+                  <p className="font-medium">Cash on Delivery</p>
+                  <p className="text-sm text-muted-foreground">Pay when you receive your order</p>
+                </div>
+              </label>
+            </div>
+          </RadioGroup>
+        </div>
+        
+        <div className="border-t border-border pt-4 pb-4">
+          <div className="flex justify-between pt-2 mb-4">
+            <span className="font-medium">Total Amount</span>
+            <span className="font-medium">{formattedPrice(total)}</span>
+          </div>
+          <Button className="w-full" size="lg" onClick={handlePayNow}>
+            Pay Now
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderOrderComplete = () => {
+    return (
+      <div className="flex flex-col items-center justify-center h-full py-10">
+        <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-4">
+          <Check size={32} className="text-green-600" />
+        </div>
+        <h3 className="text-xl font-medium mb-2">Payment Successful!</h3>
+        <p className="text-muted-foreground text-center max-w-xs mb-6">
+          Your order has been placed successfully. You will receive a confirmation shortly.
+        </p>
+        <Button onClick={onClose}>
+          Continue Shopping
         </Button>
       </div>
+    );
+  };
 
-      {cartItems.length === 0 ? (
+  // Render UPI QR code dialog
+  const renderUpiQrDialog = () => {
+    return (
+      <Dialog open={showUpiQr} onOpenChange={setShowUpiQr}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Scan QR Code to Pay</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center p-4">
+            <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" 
+                alt="UPI QR Code" 
+                className="w-56 h-56 object-contain"
+              />
+            </div>
+            <p className="text-center mb-4">
+              Open any UPI app and scan this code to pay <strong>{formattedPrice(total)}</strong>
+            </p>
+            <div className="flex space-x-4">
+              <Button variant="outline" onClick={() => setShowUpiQr(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleUpiComplete}>
+                I've Completed Payment
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  };
+
+  if (cartItems.length === 0 && paymentStep === 'cart') {
+    return (
+      <div className="flex flex-col h-full">
+        <div className="flex items-center justify-between py-4 border-b border-border">
+          <div className="flex items-center">
+            <ShoppingBag className="mr-2" size={20} />
+            <h2 className="text-xl font-semibold">Your Cart</h2>
+            <span className="ml-2 px-2 py-0.5 bg-primary/10 text-primary text-sm rounded-full">
+              0 items
+            </span>
+          </div>
+          <Button variant="ghost" size="icon" onClick={onClose}>
+            <X size={20} />
+          </Button>
+        </div>
+
         <div className="flex flex-col items-center justify-center flex-grow py-10">
           <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mb-4">
             <ShoppingBag size={32} className="text-muted-foreground" />
@@ -112,8 +267,27 @@ export const Cart = ({ onClose }: CartProps) => {
             Start Ordering
           </Button>
         </div>
-      ) : (
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-full">
+      {paymentStep === 'cart' && (
         <>
+          <div className="flex items-center justify-between py-4 border-b border-border">
+            <div className="flex items-center">
+              <ShoppingBag className="mr-2" size={20} />
+              <h2 className="text-xl font-semibold">Your Cart</h2>
+              <span className="ml-2 px-2 py-0.5 bg-primary/10 text-primary text-sm rounded-full">
+                {cartItems.length} items
+              </span>
+            </div>
+            <Button variant="ghost" size="icon" onClick={onClose}>
+              <X size={20} />
+            </Button>
+          </div>
+
           <div className="flex-grow overflow-y-auto py-2">
             {cartItems.map(item => (
               <CartItem
@@ -150,11 +324,16 @@ export const Cart = ({ onClose }: CartProps) => {
               </div>
             </div>
             <Button className="w-full mt-4" size="lg" onClick={handleCheckout}>
-              Proceed to Checkout
+              Proceed to Payment
             </Button>
           </div>
         </>
       )}
+
+      {paymentStep === 'payment' && renderPaymentMethods()}
+      {paymentStep === 'complete' && renderOrderComplete()}
+      {renderUpiQrDialog()}
     </div>
   );
 };
+
