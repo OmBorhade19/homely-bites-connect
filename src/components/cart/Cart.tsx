@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, X, Check, CreditCard, Smartphone, BanknoteIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -81,7 +80,6 @@ export const Cart = ({ onClose }: CartProps) => {
     if (paymentMethod === 'upi') {
       setShowUpiQr(true);
     } else if (paymentMethod === 'card') {
-      // Simulating payment processing
       toast.loading('Processing payment...');
       setTimeout(() => {
         toast.success('Payment successful!');
@@ -92,7 +90,6 @@ export const Cart = ({ onClose }: CartProps) => {
         }, 2000);
       }, 2000);
     } else {
-      // Cash on delivery
       toast.success('Order placed successfully!');
       setPaymentStep('complete');
       setTimeout(() => {
@@ -206,7 +203,6 @@ export const Cart = ({ onClose }: CartProps) => {
     );
   };
 
-  // Render UPI QR code dialog
   const renderUpiQrDialog = () => {
     return (
       <Dialog open={showUpiQr} onOpenChange={setShowUpiQr}>
@@ -217,7 +213,7 @@ export const Cart = ({ onClose }: CartProps) => {
           <div className="flex flex-col items-center p-4">
             <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
               <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" 
+                src="/lovable-uploads/66006829-4b6e-4a18-8e38-21546adbaee9.png" 
                 alt="UPI QR Code" 
                 className="w-56 h-56 object-contain"
               />
@@ -336,4 +332,3 @@ export const Cart = ({ onClose }: CartProps) => {
     </div>
   );
 };
-
