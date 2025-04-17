@@ -1,14 +1,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { MapPin, Menu, Heart, User } from 'lucide-react';
+import { MapPin, Menu, Heart, User, ShoppingBag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { SearchBar } from '@/components/common/SearchBar';
+import { Badge } from "@/components/ui/badge";
+import { Cart } from '@/components/cart/Cart';
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const location = useLocation();
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  // For demo purposes, set a sample cart count
+  useEffect(() => {
+    setCartItemCount(3);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,6 +37,10 @@ export const Navbar = () => {
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
+
+  const toggleCart = () => {
+    setIsCartOpen(!isCartOpen);
+  };
 
   return (
     <header 
@@ -85,10 +98,40 @@ export const Navbar = () => {
             <Button variant="ghost" size="icon" className="hover:text-primary">
               <Heart size={20} />
             </Button>
+            
+            {/* Cart */}
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="relative hover:text-primary"
+              onClick={toggleCart}
+            >
+              <ShoppingBag size={20} />
+              {cartItemCount > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-primary text-white text-xs">
+                  {cartItemCount}
+                </Badge>
+              )}
+            </Button>
           </div>
 
           {/* Mobile Menu */}
           <div className="flex items-center space-x-4 lg:hidden">
+            {/* Mobile Cart Button */}
+            <Button 
+              variant="ghost" 
+              size="icon"
+              className="relative hover:text-primary"
+              onClick={toggleCart}
+            >
+              <ShoppingBag size={20} />
+              {cartItemCount > 0 && (
+                <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-primary text-white text-xs">
+                  {cartItemCount}
+                </Badge>
+              )}
+            </Button>
+            
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -140,6 +183,13 @@ export const Navbar = () => {
           </div>
         </div>
       </div>
+      
+      {/* Cart Sidebar */}
+      <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
+        <SheetContent side="right" className="w-full sm:max-w-md">
+          <Cart onClose={() => setIsCartOpen(false)} />
+        </SheetContent>
+      </Sheet>
     </header>
   );
 };
