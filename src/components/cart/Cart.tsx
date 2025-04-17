@@ -1,5 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, X, Check, CreditCard, Smartphone, BanknoteIcon } from 'lucide-react';
+import { ShoppingBag, X, Check, CreditCard, Smartphone, BanknoteIcon, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CartItem } from './CartItem';
 import { toast } from 'sonner';
@@ -66,6 +67,11 @@ export const Cart = ({ onClose }: CartProps) => {
   const handleRemove = (id: string) => {
     setCartItems(prev => prev.filter(item => item.id !== id));
     toast.success('Item removed from cart');
+  };
+
+  const handleResetCart = () => {
+    setCartItems(initialCartItems);
+    toast.success('Cart has been reset to default items');
   };
 
   const handleCheckout = () => {
@@ -269,9 +275,14 @@ export const Cart = ({ onClose }: CartProps) => {
                 {cartItems.length} items
               </span>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X size={20} />
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" size="icon" onClick={handleResetCart} title="Reset cart">
+                <RotateCcw size={18} />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X size={20} />
+              </Button>
+            </div>
           </div>
 
           <div className="flex-grow overflow-y-auto py-2">
